@@ -2,6 +2,7 @@
 * **Removed**
 * **Bug Fix**
    * FIXED: don't advance bounding-circle iterator past the end [#6241](https://github.com/valhalla/valhalla/pull/6241)
+   * FIXED: bicycle costing penalized sidewalks and pedestrian crossings like service roads [#XXXX](https://github.com/valhalla/valhalla/pull/XXXX)
 * **Enhancement**
    * CHANGED: move `GraphTile::GetTileId` to `GraphId::FromTilePath` as a static factory ctor [#6237](https://github.com/valhalla/valhalla/pull/6237)
    * CHANGED: use `filtered_edges` in CostMatrix's second pass [#6236](https://github.com/valhalla/valhalla/pull/6236) 

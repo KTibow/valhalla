@@ -126,6 +126,13 @@ constexpr float kRoadClassFactor[] = {
     0.5f   // Service, other
 };
 
+// Pedestrian and cycle ways are classified as RoadClass::kServiceOther alongside alleys and parking
+// aisles, which kRoadClassFactor penalizes; cost them by bicycle accommodation instead.
+inline bool IsPedestrianOrCycleUse(const Use use) {
+  return use == Use::kCycleway || use == Use::kFootway || use == Use::kPath ||
+         use == Use::kSidewalk || use == Use::kPedestrianCrossing;
+}
+
 // Speed adjustment factors based on weighted grade. Comments here show an
 // example of speed changes based on "grade", using a base speed of 18 MPH
 // on flat roads
@@ -646,8 +653,8 @@ Cost BicycleCost::EdgeCost(const baldr::DirectedEdge* edge,
   // Represents the amount of accommodation that is being made for bicycling
   float accommodation_factor = 1.0f;
 
-  // Special use cases: cycleway, footway, path, living street, track
-  if (edge->use() == Use::kCycleway || edge->use() == Use::kFootway || edge->use() == Use::kPath) {
+  // Special use cases: pedestrian and cycle ways, mountain bike, living street, track
+  if (IsPedestrianOrCycleUse(edge->use())) {
     // Differentiate how segregated the cycleway/path is from pedestrians
     accommodation_factor = path_cyclelane_factor_[static_cast<uint32_t>(edge->cyclelane())];
   } else if (edge->use() == Use::kMountainBike && type_ == BicycleType::kMountain) {
@@ -738,7 +745,7 @@ Cost BicycleCost::TransitionCost(const baldr::DirectedEdge* edge,
   // accommodation
   float class_factor = kRoadClassFactor[static_cast<uint32_t>(edge->classification())];
   float bike_accom = 1.0f;
-  if (edge->use() == Use::kCycleway || edge->use() == Use::kFootway || edge->use() == Use::kPath) {
+  if (IsPedestrianOrCycleUse(edge->use())) {
     bike_accom = 0.05f;
     // These uses are classified as "service/other" roads but should not be penalized as such so we
     // change it's factor
@@ -818,7 +825,7 @@ Cost BicycleCost::TransitionCostReverse(const uint32_t idx,
   // accommodation
   float class_factor = kRoadClassFactor[static_cast<uint32_t>(edge->classification())];
   float bike_accom = 1.0f;
-  if (edge->use() == Use::kCycleway || edge->use() == Use::kFootway || edge->use() == Use::kPath) {
+  if (IsPedestrianOrCycleUse(edge->use())) {
     bike_accom = 0.05f;
     // These uses are considered "service/other" roads but should not be penalized as such so we
     // change it's factor
