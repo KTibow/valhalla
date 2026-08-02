@@ -1,0 +1,36 @@
+name: Targeted gurka tests
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  targeted:
+    name: Run new gurka targets only
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          ./scripts/install-linux-deps.sh
+          python -m pip install requests shapely numpy
+
+      - name: Build targets
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=On -DENABLE_PYTHON_BINDINGS=Off \
+            -DENABLE_SINGLE_FILES_WERROR=Off
+          make -C build -j$(nproc) gurka_bicycle_cost gurka_crossing_bicycle_access
+
+      - name: Run targeted tests
+        run: |
+          cd build
+          rc=0
+          ./test/gurka/gurka_bicycle_cost || rc=1
+          ./test/gurka/gurka_crossing_bicycle_access || rc=1
+          exit $rc
