@@ -7,6 +7,7 @@
    * CHANGED: move `GraphTile::GetTileId` to `GraphId::FromTilePath` as a static factory ctor [#6237](https://github.com/valhalla/valhalla/pull/6237)
    * CHANGED: use `filtered_edges` in CostMatrix's second pass [#6236](https://github.com/valhalla/valhalla/pull/6236) 
    * ADDED: `cost` in verbose matrix output [#6249](https://github.com/valhalla/valhalla/pull/6249)
+   * ADDED: bicycle access at walking pace (dismount) on untagged `footway=crossing` ways, like steps [#XXXX](https://github.com/valhalla/valhalla/pull/XXXX)
 
 ## Release Date: 2026-07-24 Valhalla 3.8.3
 * **Removed**
