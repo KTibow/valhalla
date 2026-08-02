@@ -23,7 +23,7 @@ jobs:
 
       - name: Build targets
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=On -DENABLE_PYTHON_BINDINGS=Off \
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=On -DENABLE_PYTHON_BINDINGS=On \
             -DENABLE_SINGLE_FILES_WERROR=Off
           make -C build -j$(nproc) gurka_bicycle_cost gurka_crossing_bicycle_access
 
